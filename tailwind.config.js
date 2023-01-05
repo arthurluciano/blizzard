@@ -8,6 +8,11 @@ module.exports = {
       fontFamily: {
         sans: ['Poppins', ...fontFamily.sans],
       },
+      colors: {
+        'brand-500': '#00AEFF',
+
+        background: '#020203',
+      },
     },
   },
   plugins: [],
