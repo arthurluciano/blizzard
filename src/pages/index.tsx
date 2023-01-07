@@ -9,19 +9,22 @@ import { CaretDown, Play, User } from 'phosphor-react'
 import { OutlinedButton } from '../components/buttons/OutlinedButton'
 import { PrimaryButton } from '../components/buttons/PrimaryButton'
 import { Logo } from '../components/Logo'
+import { ProgressBar } from '../components/ProgressBar'
 import { GameData, GAME_DATA } from '../utils/auxiliar-game-data'
 
 const NAVBAR_OPTIONS = ['Jogos', 'Esportes', 'Loja', 'Notícias', 'Suporte']
 
-interface LandingPageProps {
-  data: GameData[]
-}
-
-export default function LandingPage({ data: gameData }: LandingPageProps) {
-  const [selectedGame, setSelectedGame] = useState<GameData>(gameData[0])
+export default function LandingPage() {
+  const [selectedGame, setSelectedGame] = useState<GameData>(GAME_DATA[0])
 
   const progress =
-    (100 * gameData.findIndex(game => game.name === selectedGame.name) + 1) / gameData.length + 25
+    (100 * GAME_DATA.findIndex(game => game.name === selectedGame.name) + 1) / GAME_DATA.length + 25
+
+  function handleSelectGame(game: GameData, index: number) {
+    if (index > 2) return
+
+    setSelectedGame(game)
+  }
 
   return (
     <>
@@ -62,7 +65,7 @@ export default function LandingPage({ data: gameData }: LandingPageProps) {
 
         <section className="flex items-center justify-between h-[40rem] w-full max-w-7xl mx-auto">
           <div className="flex flex-col gap-y-5">
-            {gameData.map((game, index) => (
+            {GAME_DATA.map((game, index) => (
               <button
                 key={`game-{${index}}`}
                 type="button"
@@ -70,7 +73,7 @@ export default function LandingPage({ data: gameData }: LandingPageProps) {
                   'h-12 w-12 transition-all',
                   game.name !== selectedGame.name && 'grayscale brightness-125'
                 )}
-                onClick={() => setSelectedGame(game)}
+                onClick={() => handleSelectGame(game, index)}
               >
                 <Image src={game.images.icon} alt="Game icon" width={48} height={48} />
               </button>
@@ -83,8 +86,14 @@ export default function LandingPage({ data: gameData }: LandingPageProps) {
               <span className="font-normal text-lg">{selectedGame.texts.description}</span>
             </div>
 
-            <PrimaryButton type="button" size="medium">
-              Jogue agora
+            <PrimaryButton type="button" size={selectedGame.released ? 'medium' : 'large'}>
+              {selectedGame.released ? (
+                'Jogue agora'
+              ) : (
+                <>
+                  <User size={18} weight="bold" /> Reserve agora na pré-venda
+                </>
+              )}
             </PrimaryButton>
           </div>
 
@@ -109,19 +118,8 @@ export default function LandingPage({ data: gameData }: LandingPageProps) {
           </div>
         </section>
 
-        <div
-          className="h-1 bg-brand-500 transition-all"
-          style={{ width: `${progress > 100 ? 100 : progress}%` }}
-        />
+        <ProgressBar progress={progress} />
       </div>
     </>
   )
-}
-
-export const getServerSideProps: GetServerSideProps<LandingPageProps> = async () => {
-  return {
-    props: {
-      data: GAME_DATA,
-    },
-  }
 }
