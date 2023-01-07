@@ -2,23 +2,12 @@ import { ButtonHTMLAttributes, ReactNode } from 'react'
 
 import clsx from 'clsx'
 
-type ButtonProps = {
-  children: ReactNode
-  size?: 'small' | 'medium' | 'full'
-} & ButtonHTMLAttributes<HTMLButtonElement>
+import { Button, ButtonProps, BUTTON_SIZES_CLASSES } from './Button'
 
-export function PrimaryButton({ children, size = 'full', ...rest }: ButtonProps) {
+export function PrimaryButton({ children, ...rest }: ButtonProps) {
   return (
-    <button
-      type="button"
-      {...rest}
-      className={clsx(
-        'bg-brand-500 w-full h-10 rounded-[4px] font-semibold flex items-center justify-center gap-x-[6px]',
-        size === 'small' && 'max-w-[116px] text-sm font-medium',
-        size === 'medium' && 'max-w-[167px] text-sm'
-      )}
-    >
+    <Button type="button" {...rest} additionalClasses={['bg-brand-500']}>
       {children}
-    </button>
+    </Button>
   )
 }
