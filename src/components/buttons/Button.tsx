@@ -21,7 +21,7 @@ export function Button({ children, additionalClasses, size = 'full', ...rest }: 
       type="button"
       {...rest}
       className={clsx(
-        'w-full h-12 rounded-[4px] font-semibold flex items-center justify-center gap-x-[6px]',
+        'w-full h-12 rounded-[4px] font-semibold flex items-center justify-center gap-x-[6px] scale-100 hover:scale-105 transition-transform',
         additionalClasses,
         BUTTON_SIZES_CLASSES[size]
       )}

@@ -19,7 +19,7 @@ export const GAME_DATA: GameData[] = [
     released: true,
     images: {
       logo: '/games/diablo-logo.png',
-      icon: '/games/diablo-icon.png',
+      icon: '/games/diablo4-icon.png',
       banner: '/games/diablo-bg.png',
       preview: '/games/diablo-animation.gif',
     },
@@ -57,11 +57,11 @@ export const GAME_DATA: GameData[] = [
     },
   },
   {
-    name: 'Diablo IVV3',
+    name: 'Diablo Immortal',
     released: false,
     images: {
       logo: '/games/diablo-logo.png',
-      icon: '/games/diablo2-icon.png',
+      icon: '/games/diablo-imt-icon.png',
       banner: '/games/diablo-bg.png',
       preview: '/games/diablo-animation.png',
     },

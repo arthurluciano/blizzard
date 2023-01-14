@@ -1,21 +1,79 @@
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 
-import { GetServerSideProps } from 'next'
 import Image from 'next/image'
 
 import clsx from 'clsx'
-import { CaretDown, Play, User } from 'phosphor-react'
+import { CaretDown, ChatCircleDots, Download, Play, User } from 'phosphor-react'
 
 import { OutlinedButton } from '../components/buttons/OutlinedButton'
 import { PrimaryButton } from '../components/buttons/PrimaryButton'
+import { DropdownMenu, DropdownMenuLink } from '../components/dropdown/DropdownMenu'
+import { EsportsDropdownContent } from '../components/dropdown/EsportsDropdownContent'
+import { GamesDropdownContent } from '../components/dropdown/GamesDropdownContent'
+import { BlizzardIcon } from '../components/icons/BlizzardIcon'
+import { ChatIcon } from '../components/icons/ChatIcon'
+import { DownloadIcon } from '../components/icons/DownloadIcon'
+import { GridIcon } from '../components/icons/GridIcon'
+import { TrophyIcon } from '../components/icons/TrophyIcon'
 import { Logo } from '../components/Logo'
 import { ProgressBar } from '../components/ProgressBar'
 import { GameData, GAME_DATA } from '../utils/auxiliar-game-data'
 
-const NAVBAR_OPTIONS = ['Jogos', 'Esportes', 'Loja', 'Notícias', 'Suporte']
+export interface NavbarOption {
+  name: string
+  dropdown?: {
+    content: ReactNode
+    links: DropdownMenuLink[]
+  }
+}
+
+const NAVBAR_OPTIONS: NavbarOption[] = [
+  {
+    name: 'Jogos',
+    dropdown: {
+      content: <GamesDropdownContent />,
+      links: [
+        {
+          icon: <GridIcon />,
+          label: 'Ver todos os jogos',
+        },
+        {
+          icon: <BlizzardIcon />,
+          label: 'Aplicativo Battle.net',
+        },
+        {
+          icon: <DownloadIcon />,
+          label: 'Downloads',
+        },
+        {
+          icon: <ChatIcon />,
+          label: 'Fóruns dos jogos',
+        },
+      ],
+    },
+  },
+  {
+    name: 'Esportes',
+    dropdown: {
+      content: <EsportsDropdownContent />,
+      links: [{ icon: <TrophyIcon />, label: 'Torneios da comunidade' }],
+    },
+  },
+  {
+    name: 'Loja',
+  },
+  {
+    name: 'Notícias',
+  },
+  {
+    name: 'Suporte',
+  },
+]
 
 export default function LandingPage() {
   const [selectedGame, setSelectedGame] = useState<GameData>(GAME_DATA[0])
+
+  const [openedMenu, setOpenedMenu] = useState<NavbarOption | null>(null)
 
   const progress =
     (100 * GAME_DATA.findIndex(game => game.name === selectedGame.name) + 1) / GAME_DATA.length + 25
@@ -26,15 +84,30 @@ export default function LandingPage() {
     setSelectedGame(game)
   }
 
+  function handleClickNavbarOption(option: NavbarOption) {
+    if (!option.dropdown) {
+      return
+    }
+
+    if (option.name === openedMenu?.name) {
+      setOpenedMenu(null)
+      return
+    }
+
+    setOpenedMenu(option)
+  }
+
   return (
     <>
       <div
-        className={`h-[46rem] w-full bg-no-repeat bg-cover bg-top flex flex-col transition-[background]`}
+        className={`h-[46rem] w-full bg-no-repeat bg-cover bg-top flex flex-col transition-[background] relative`}
         style={{
           backgroundImage: `url('${selectedGame.images.banner}')`,
         }}
       >
-        <header className="w-full border-b-2 border-[#FFFFFF0A]">
+        <DropdownMenu opened={openedMenu} setOpened={setOpenedMenu} />
+
+        <header className="w-full border-b-2 border-[#FFFFFF0A] z-30">
           <div className="mx-auto max-w-7xl w-full py-7 flex items-center justify-between relative">
             <Logo />
             <nav className="ml-28">
@@ -43,8 +116,20 @@ export default function LandingPage() {
                   <li
                     key={`option-${index}`}
                     className="text-sm flex items-center gap-x-3 font-medium cursor-pointer"
+                    onClick={() => handleClickNavbarOption(option)}
                   >
-                    {option} <CaretDown size={12} weight="bold" color="#FFFFFF60" />
+                    {option.name}
+                    {option.dropdown && (
+                      <CaretDown
+                        size={12}
+                        weight="bold"
+                        color={option.name === openedMenu?.name ? '#00AEFF' : '#FFFFFF60'}
+                        className={clsx(
+                          'rotate-0 transition-transform',
+                          option.name === openedMenu?.name && 'rotate-180'
+                        )}
+                      />
+                    )}
                   </li>
                 ))}
               </ul>
@@ -110,7 +195,7 @@ export default function LandingPage() {
                   backgroundImage: `url(${selectedGame.images.preview})`,
                 }}
               >
-                <div className="h-[51px] w-[51px] z-10 rounded-full bg-gradient-to-r from-[#07070adb] to-[#0f10167f] backdrop-blur-[1.5] flex items-center justify-center">
+                <div className="h-[51px] w-[51px] z-[1] rounded-full bg-gradient-to-r from-[#07070adb] to-[#0f10167f] backdrop-blur-[1.5] flex items-center justify-center">
                   <Play size={20} weight="fill" color="#00AEFF" />
                 </div>
               </div>
