@@ -1,5 +1,6 @@
 import { ReactNode, useState } from 'react'
 
+import { GetServerSideProps } from 'next'
 import Image from 'next/image'
 
 import clsx from 'clsx'
@@ -14,7 +15,11 @@ import { BlizzardIcon } from '../components/icons/BlizzardIcon'
 import { ChatIcon } from '../components/icons/ChatIcon'
 import { DownloadIcon } from '../components/icons/DownloadIcon'
 import { GridIcon } from '../components/icons/GridIcon'
+import { NintendoIcon } from '../components/icons/NintendoIcon'
+import { PlaystationIcon } from '../components/icons/PlaystationIcon'
 import { TrophyIcon } from '../components/icons/TrophyIcon'
+import { WhiteBlizzardIcon } from '../components/icons/WhiteBlizzardIcon'
+import { XboxIcon } from '../components/icons/XboxIcon'
 import { Logo } from '../components/Logo'
 import { ProgressBar } from '../components/ProgressBar'
 import { GameData, GAME_DATA } from '../utils/auxiliar-game-data'
@@ -70,7 +75,16 @@ const NAVBAR_OPTIONS: NavbarOption[] = [
   },
 ]
 
-export default function LandingPage() {
+interface BrChallengesResponse {
+  data: {
+    name: string
+    category: string
+    image: string
+    logo: string
+  }[]
+}
+
+export default function LandingPage({ data }: BrChallengesResponse) {
   const [selectedGame, setSelectedGame] = useState<GameData>(GAME_DATA[0])
 
   const [openedMenu, setOpenedMenu] = useState<NavbarOption | null>(null)
@@ -205,6 +219,89 @@ export default function LandingPage() {
 
         <ProgressBar progress={progress} />
       </div>
+      <main className="mx-auto max-w-7xl w-full flex flex-col gap-y-20 py-20">
+        <section className="w-full flex justify-between">
+          <div className="flex gap-x-[171px]">
+            <span className="font-semibold text-sm text-[#8F9199] mt-4">GAMES</span>
+
+            <h2 className="text-[32px] font-bold self-start">
+              Jogos <br /> exclusivos
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-x-6 self-end">
+            <a href="#">
+              <WhiteBlizzardIcon />
+            </a>
+            <a href="#">
+              <NintendoIcon />
+            </a>
+            <a href="#">
+              <XboxIcon />
+            </a>
+            <a href="#">
+              <PlaystationIcon />
+            </a>
+          </div>
+
+          <a href="#" className="flex items-center gap-x-[10px] text-brand-500 self-end">
+            <GridIcon />
+            Ver todos os jogos
+          </a>
+        </section>
+
+        <section className="grid grid-cols-4 gap-x-8 gap-y-11 ">
+          {data.map((game, index) => (
+            <div key={`game-${index}`} className="flex flex-col cursor-pointer">
+              <div className="h-[412px] max-w-[300px] w-full overflow-hidden relative rounded">
+                <div className="absolute h-full w-full bg-gradient-to-b from-[#00000040] to-transparent z-10 pointer-events-none"></div>
+
+                <Image
+                  src={game.image}
+                  alt={game.name}
+                  className="transition scale-100 hover:scale-110 h-full w-full object-cover"
+                  width={300}
+                  height={412}
+                />
+
+                <Image
+                  src={game.logo}
+                  alt={game.name}
+                  className="absolute z-10 bottom-11 right-[50%] translate-x-[50%]"
+                  width={159}
+                  height={105}
+                />
+              </div>
+
+              <div className="flex flex-col justify-center gap-y-1 mt-4">
+                <strong className="text-xl font-semibold">{game.name}</strong>
+                <span className="text-base text-[#E5E5E5CC]">{game.category}</span>
+              </div>
+            </div>
+          ))}
+          <div className="flex flex-col cursor-pointer">
+            <div className="h-[412px] max-w-[300px] w-full overflow-hidden relative rounded border border-solid border-[#212428] flex flex-col items-center justify-center gap-y-9">
+              <Logo />
+
+              <div className="flex items-center gap-x-3">
+                <GridIcon color="#C4C4C4" />
+                Ver todos os jogos
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
     </>
   )
+}
+export const getServerSideProps: GetServerSideProps = async () => {
+  const response = await fetch('https://api.brchallenges.com/api/blizzard/games')
+
+  const data = await response.json()
+
+  return {
+    props: {
+      data,
+    },
+  }
 }
