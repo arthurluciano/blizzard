@@ -8,7 +8,7 @@ export function TrophyIcon() {
         stroke="#61CDFF"
         strokeWidth="1.5"
       />
-      <path d="M12 16.5V20.5" stroke="#61CDFF" stroke-width="1.5" />
+      <path d="M12 16.5V20.5" stroke="#61CDFF" strokeWidth="1.5" />
       <path
         d="M9 20.5H15"
         stroke="#61CDFF"
