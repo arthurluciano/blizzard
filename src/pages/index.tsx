@@ -267,7 +267,7 @@ export default function LandingPage({ data }: BrChallengesResponse) {
                 <Image
                   src={game.logo}
                   alt={game.name}
-                  className="absolute z-10 bottom-11 right-[50%] translate-x-[50%]"
+                  className="absolute z-10 bottom-11 right-[50%] translate-x-[50%] pointer-events-none"
                   width={159}
                   height={105}
                 />
