@@ -24,10 +24,21 @@ export function DropdownMenu({ opened, setOpened }: DropdownMenuProps) {
       setOpened(null)
     }
 
+    function onScrollPage() {
+      if (!opened) return
+
+      setOpened(null)
+    }
+
     document.addEventListener('click', onClickOutsideDropdown)
 
-    return () => document.removeEventListener('click', onClickOutsideDropdown)
-  }, [setOpened])
+    document.addEventListener('scroll', onScrollPage)
+
+    return () => {
+      document.removeEventListener('click', onClickOutsideDropdown)
+      document.removeEventListener('scroll', onScrollPage)
+    }
+  }, [setOpened, opened])
 
   return (
     <div

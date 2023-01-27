@@ -3,7 +3,7 @@ import { ButtonHTMLAttributes, ReactNode } from 'react'
 import clsx, { ClassValue } from 'clsx'
 
 export type ButtonProps = {
-  children: ReactNode
+  children?: ReactNode
   additionalClasses?: ClassValue[]
   size?: 'small' | 'medium' | 'large' | 'full'
 } & ButtonHTMLAttributes<HTMLButtonElement>
