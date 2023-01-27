@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useRef } from 'react'
 
 import clsx from 'clsx'
 
-import { NavbarOption } from '../../pages'
+import { NavbarOption } from '../sections/Header'
 
 export interface DropdownMenuProps {
   opened: NavbarOption | null
